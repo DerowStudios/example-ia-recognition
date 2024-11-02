@@ -1,13 +1,13 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { SpeciesService } from './species.service';
 
 @Controller('species')
 export class SpeciesController {
   constructor(private readonly speciesService: SpeciesService) {}
 
-  @Get('fetch')
-  async fetchAndSaveSpecies() {
-    await this.speciesService.fetchAndSaveSpecies();
-    return { message: 'Datos descargados y guardados exitosamente' };
+  @Get('train')
+  async trainModel(@Query('taxon') taxon: string) {
+    await this.speciesService.fetchAndTrainSpeciesModel(taxon);
+    return 'Modelo entrenado con éxito!';
   }
 }
