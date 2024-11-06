@@ -38,7 +38,9 @@ export class SpeciesService implements OnModuleInit {
   //   return predictionArray;
   // }
 
-  async predict(file: Multer.File): Promise<number[]> {
+  async predict(
+    file: Multer.File,
+  ): Promise<{ index: number; class: string; value: number }[]> {
     if (!this.model) {
       console.error('El modelo no está cargado');
       throw new Error('El modelo no está cargado');
@@ -66,16 +68,18 @@ export class SpeciesService implements OnModuleInit {
       console.log('Predicción realizada:', prediction);
       const predictionArray = prediction.arraySync() as number[][];
       console.log('Array de predicción:', predictionArray);
-      const maxIndex = predictionArray[0].indexOf(
-        Math.max(...predictionArray[0]),
-      );
-      const predictedClass = this.classes[maxIndex];
-      console.log(`Clase predicha: ${predictedClass}`);
-      // Limpiar el tensor para liberar memoria
+      const results = predictionArray[0].map((value, index) => ({
+        index,
+        class: this.classes[index],
+        value,
+      }));
+      // Ordenar las predicciones por valor de mayor a menor
+      results.sort((a, b) => b.value - a.value);
+      console.log('Resultados ordenados:', results);
       imageTensor.dispose();
       resizedTensor.dispose();
       prediction.dispose();
-      return predictionArray[0];
+      return results;
     } catch (error) {
       console.error('Error en la predicción:', error);
       throw new Error('No se pudo procesar la imagen para la predicción');
