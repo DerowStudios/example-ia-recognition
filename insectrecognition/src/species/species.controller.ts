@@ -1,13 +1,19 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { SpeciesService } from './species.service';
+import { Multer } from 'multer';
 
-@Controller('species')
+@Controller()
 export class SpeciesController {
-  constructor(private readonly speciesService: SpeciesService) {}
-
-  @Get('train')
-  async trainModel(@Query('taxon') taxon: string) {
-    await this.speciesService.fetchAndTrainSpeciesModel(taxon);
-    return 'Modelo entrenado con éxito!';
+  constructor(private readonly appService: SpeciesService) {}
+  @Post('predict') @UseInterceptors(FileInterceptor('image')) async predict(
+    @UploadedFile() file: Multer.File,
+  ): Promise<number[]> {
+    return this.appService.predict(file);
   }
 }
