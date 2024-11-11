@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Post,
   UploadedFile,
@@ -13,7 +14,14 @@ export class SpeciesController {
   constructor(private readonly appService: SpeciesService) {}
   @Post('predict') @UseInterceptors(FileInterceptor('image')) async predict(
     @UploadedFile() file: Multer.File,
-  ): Promise<{ index: number; class: string; value: number }[]> {
+    @Body() body: any,
+  ): Promise<{ index: number; class: string; value: number }[] | string> {
+    console.log('este body', body);
+    console.log('File received:', file); // Verifica si el archivo es recibido correctamente
+    if (!file) {
+      // return 'no hay archivo';
+      throw new Error('No se recibió ningún archivo');
+    }
     return this.appService.predict(file);
   }
 }

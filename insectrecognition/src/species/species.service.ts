@@ -2,6 +2,9 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import * as tf from '@tensorflow/tfjs-node';
 import { join } from 'path';
 import { Multer } from 'multer'; // Importar Multer directamente desde las definiciones de tipo
+import * as sharp from 'sharp';
+import * as fs from 'fs';
+import * as path from 'path';
 @Injectable()
 export class SpeciesService implements OnModuleInit {
   private model: tf.GraphModel | null = null;
@@ -27,27 +30,43 @@ export class SpeciesService implements OnModuleInit {
     }
   }
 
-  // async predict(image: any): Promise<number[]> {
-  //   const processedImage = tf
-  //     .tensor(image)
-  //     .resizeBilinear([224, 224])
-  //     .expandDims(0)
-  //     .div(tf.scalar(255));
-  //   const predictions = this.model.predict(processedImage) as tf.Tensor;
-  //   const predictionArray = [...predictions.dataSync()];
-  //   return predictionArray;
-  // }
-
   async predict(
     file: Multer.File,
   ): Promise<{ index: number; class: string; value: number }[]> {
+    console.log('Recibiendo imagen para predicción:', file);
     if (!this.model) {
       console.error('El modelo no está cargado');
       throw new Error('El modelo no está cargado');
     }
     try {
+      const outputPath = path.join(__dirname, 'output', 'output.jpg');
       // Leer el archivo y convertirlo en un buffer
-      const imageBuffer = file.buffer;
+      const width = 224;
+      // const height = 224;
+      //configurar la saturacion para decifrar mejor las imagenes enviadas.
+      // .modulate({ saturation: 5, lightness: 0.1 }) ESTA CONFIGURACION FUNCIONA PARA RECONOCER A LOS 3 BICHOS
+
+      const imageDownload = await sharp(file.buffer)
+        .modulate({ saturation: 5, lightness: 0.1 })
+        .extend({
+          top: 0,
+          bottom: 0,
+          left: (width - 130) / 2,
+          right: (width - 130) / 2,
+          background: { r: 255, g: 255, b: 255, alpha: 1 },
+        })
+        .toFile(outputPath);
+      const imageBuffer = await sharp(file.buffer)
+        .modulate({ saturation: 5, lightness: 0.1 })
+        .extend({
+          top: 0,
+          bottom: 0,
+          left: (width - 130) / 2,
+          right: (width - 130) / 2,
+          background: { r: 255, g: 255, b: 255, alpha: 1 },
+        })
+        .toBuffer();
+
       console.log('Buffer de imagen leído con éxito');
       // Convertir el buffer de la imagen en un tensor
       const imageTensor = tf.node
