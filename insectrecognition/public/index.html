@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Capturar y Subir Imagen</title>
+    <title>Capturar tus polinizadores!!</title>
     <style>
         body {
             font-family: Arial, sans-serif;
         }
         .container {
-            width: 300px;
+          padding-top: 10rem;
+            width: 600px;
             margin: 50px auto;
             text-align: center;
         }
         .image-preview {
-            max-width: 100%;
-            max-height: 300px;
+            /* max-width: 100%;
+            max-height: 300px; */
             margin-bottom: 10px;
         }
         .result {
@@ -25,7 +26,7 @@
             height: 100%;
         }
         .loading {
-            color: #888;
+            color: #888888;
         }
         /* Estilo del botón */
         .input-button {
@@ -41,10 +42,21 @@
             cursor: pointer;
             border-radius: 5px;
             margin: 10rem 0;
+            font-size: xx-large;
+     
         }
         /* Ocultar el input de archivo real */
         #imageInput {
             display: none;
+        }
+        .imagePreviewContainer{
+         height: 50rem;
+         width: 30rem;
+        }
+        .result{
+          font-size: xx-large;
+          color: black;
+          font-weight: 500;
         }
     </style>
 </head>
@@ -52,7 +64,7 @@
     <div class="container">
         <h1>Capturar y Subir Imagen para Predicción</h1>
         <input type="file" id="imageInput" accept="image/*" capture="environment">
-        <button class="input-button" id="customButton">Seleccionar Imagen</button>
+        <button class="input-button" id="customButton">Registrar en la Pokedex</button>
         <div id="imagePreviewContainer" style="display: none;">
             <img id="imagePreview" class="image-preview" src="" alt="Image Preview">
         </div>
