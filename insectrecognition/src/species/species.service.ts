@@ -46,16 +46,16 @@ export class SpeciesService implements OnModuleInit {
       //configurar la saturacion para decifrar mejor las imagenes enviadas.
       // .modulate({ saturation: 5, lightness: 0.1 }) ESTA CONFIGURACION FUNCIONA PARA RECONOCER A LOS 3 BICHOS
 
-      const imageDownload = await sharp(file.buffer)
-        .modulate({ saturation: 5, lightness: 0.1 })
-        .extend({
-          top: 0,
-          bottom: 0,
-          left: (width - 130) / 2,
-          right: (width - 130) / 2,
-          background: { r: 255, g: 255, b: 255, alpha: 1 },
-        })
-        .toFile(outputPath);
+      // const imageDownload = await sharp(file.buffer)
+      //   .modulate({ saturation: 5, lightness: 0.1 })
+      //   .extend({
+      //     top: 0,
+      //     bottom: 0,
+      //     left: (width - 130) / 2,
+      //     right: (width - 130) / 2,
+      //     background: { r: 255, g: 255, b: 255, alpha: 1 },
+      //   })
+      //   .toFile(outputPath);
       const imageBuffer = await sharp(file.buffer)
         .modulate({ saturation: 5, lightness: 0.1 })
         .extend({

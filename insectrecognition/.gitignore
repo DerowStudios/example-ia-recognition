@@ -3,6 +3,7 @@
 /node_modules
 /build
 /src/species/tfjs_model/
+/src/config
 # Logs
 logs
 *.log
